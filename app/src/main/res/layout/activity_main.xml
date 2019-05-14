@@ -14,7 +14,7 @@
         android:id="@+id/et_search_box"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter a query, then click Search"
+        android:hint="Enter the Country Name, then click Search"
         android:textSize="22sp" />
 
     <TextView
@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Click search and your URL will show up here!"
+        android:text="By Madhur Dixit 17BCE2181"
         android:textSize="22sp" />
 
     <FrameLayout
