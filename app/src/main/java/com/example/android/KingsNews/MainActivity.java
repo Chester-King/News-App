@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.android.asynctaskloader;
+package com.example.android.KingsNews;
 
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
@@ -28,8 +28,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.android.asynctaskloader.utilities.JsonParser;
-import com.example.android.asynctaskloader.utilities.NetworkUtils;
+import com.example.android.KingsNews.utilities.JsonParser;
+import com.example.android.KingsNews.utilities.NetworkUtils;
 
 import org.json.JSONException;
 
@@ -78,11 +78,7 @@ public class MainActivity extends AppCompatActivity implements
         getSupportLoaderManager().initLoader(GITHUB_SEARCH_LOADER, null, this);
     }
 
-    /**
-     * This method retrieves the search text from the EditText, constructs the
-     * URL (using {@link NetworkUtils}) for the github repository you'd like to find, displays
-     * that URL in a TextView, and finally request that an AsyncTaskLoader performs the GET request.
-     */
+
     private void makeGithubSearchQuery() {
         String githubQuery = mSearchBoxEditText.getText().toString();
 
@@ -108,20 +104,7 @@ public class MainActivity extends AppCompatActivity implements
         Bundle queryBundle = new Bundle();
         queryBundle.putString(SEARCH_QUERY_URL_EXTRA, githubSearchUrl.toString());
 
-        /*
-         * Now that we've created our bundle that we will pass to our Loader, we need to decide
-         * if we should restart the loader (if the loader already existed) or if we need to
-         * initialize the loader (if the loader did NOT already exist).
-         *
-         * We do this by first store the support loader manager in the variable loaderManager.
-         * All things related to the Loader go through through the LoaderManager. Once we have a
-         * hold on the support loader manager, (loaderManager) we can attempt to access our
-         * githubSearchLoader. To do this, we use LoaderManager's method, "getLoader", and pass in
-         * the ID we assigned in its creation. You can think of this process similar to finding a
-         * View by ID. We give the LoaderManager an ID and it returns a loader (if one exists). If
-         * one doesn't exist, we tell the LoaderManager to create one. If one does exist, we tell
-         * the LoaderManager to restart it.
-         */
+
         LoaderManager loaderManager = getSupportLoaderManager();
         Loader<String> githubSearchLoader = loaderManager.getLoader(GITHUB_SEARCH_LOADER);
         if (githubSearchLoader == null) {
@@ -131,13 +114,7 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    /**
-     * This method will make the View for the JSON data visible and
-     * hide the error message.
-     * <p>
-     * Since it is okay to redundantly set the visibility of a View, we don't
-     * need to check whether each view is currently visible or invisible.
-     */
+
     private void showJsonDataView() {
         /* First, make sure the error is invisible */
         mErrorMessageDisplay.setVisibility(View.INVISIBLE);
@@ -147,13 +124,7 @@ public class MainActivity extends AppCompatActivity implements
         mUrlDisplayTextView.setVisibility(View.GONE);
     }
 
-    /**
-     * This method will make the error message visible and hide the JSON
-     * View.
-     * <p>
-     * Since it is okay to redundantly set the visibility of a View, we don't
-     * need to check whether each view is currently visible or invisible.
-     */
+
     private void showErrorMessage() {
         /* First, hide the currently visible data */
         mSearchResultsTextView.setVisibility(View.INVISIBLE);
@@ -165,30 +136,20 @@ public class MainActivity extends AppCompatActivity implements
     public Loader<String> onCreateLoader(int id, final Bundle args) {
         return new AsyncTaskLoader<String>(this) {
 
-            // COMPLETED (1) Create a String member variable called mGithubJson that will store the raw JSON
-            /* This String will contain the raw JSON from the results of our GitHub search */
             String mGithubJson;
 
             @Override
             protected void onStartLoading() {
 
-                /* If no arguments were passed, we don't have a query to perform. Simply return. */
                 if (args == null) {
                     return;
                 }
 
-                // COMPLETED (2) If mGithubJson is not null, deliver that result. Otherwise, force a load
-                /*
-                 * If we already have cached results, just deliver them now. If we don't have any
-                 * cached results, force a load.
-                 */
+
                 if (mGithubJson != null) {
                     deliverResult(mGithubJson);
                 } else {
-                    /*
-                     * When we initially begin loading in the background, we want to display the
-                     * loading indicator to the user
-                     */
+
                     mLoadingIndicator.setVisibility(View.VISIBLE);
                     mUrlDisplayTextView.setVisibility(View.GONE);
                     mSearchResultsTextView.setText("Searching...");
@@ -199,15 +160,12 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public String loadInBackground() {
 
-                /* Extract the search query from the args using our constant */
                 String searchQueryUrlString = args.getString(SEARCH_QUERY_URL_EXTRA);
 
-                /* If the user didn't enter anything, there's nothing to search for */
                 if (TextUtils.isEmpty(searchQueryUrlString)) {
                     return null;
                 }
 
-                /* Parse the URL from the passed in String and perform the search */
                 try {
                     URL githubUrl = new URL(searchQueryUrlString);
                     String githubSearchResults = NetworkUtils.getResponseFromHttpUrl(githubUrl);
@@ -218,8 +176,6 @@ public class MainActivity extends AppCompatActivity implements
                 }
             }
 
-            // COMPLETED (3) Override deliverResult and store the data in mGithubJson
-            // COMPLETED (4) Call super.deliverResult after storing the data
             @Override
             public void deliverResult(String githubJson) {
                 mGithubJson = githubJson;
@@ -231,14 +187,9 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onLoadFinished(Loader<String> loader, String data) {
 
-        /* When we finish loading, we want to hide the loading indicator from the user. */
         mLoadingIndicator.setVisibility(View.INVISIBLE);
         String[] News = null;
         String Display = "";
-        /*
-         * If the results are null, we assume an error has occurred. There are much more robust
-         * methods for checking errors, but we wanted to keep this particular example simple.
-         */
         if (null == data) {
             showErrorMessage();
         } else {
@@ -261,10 +212,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onLoaderReset(Loader<String> loader) {
-        /*
-         * We aren't using this method in our example application, but we are required to Override
-         * it to implement the LoaderCallbacks<String> interface
-         */
+
     }
 
     @Override

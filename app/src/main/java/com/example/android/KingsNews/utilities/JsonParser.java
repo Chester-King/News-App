@@ -1,4 +1,4 @@
-package com.example.android.asynctaskloader.utilities;
+package com.example.android.KingsNews.utilities;
 
 import android.content.Context;
 
