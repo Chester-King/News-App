@@ -28,7 +28,10 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.android.asynctaskloader.utilities.JsonParser;
 import com.example.android.asynctaskloader.utilities.NetworkUtils;
+
+import org.json.JSONException;
 
 import java.io.IOException;
 import java.net.URL;
@@ -140,6 +143,8 @@ public class MainActivity extends AppCompatActivity implements
         mErrorMessageDisplay.setVisibility(View.INVISIBLE);
         /* Then, make sure the JSON data is visible */
         mSearchResultsTextView.setVisibility(View.VISIBLE);
+
+        mUrlDisplayTextView.setVisibility(View.GONE);
     }
 
     /**
@@ -185,7 +190,8 @@ public class MainActivity extends AppCompatActivity implements
                      * loading indicator to the user
                      */
                     mLoadingIndicator.setVisibility(View.VISIBLE);
-
+                    mUrlDisplayTextView.setVisibility(View.GONE);
+                    mSearchResultsTextView.setText("Searching...");
                     forceLoad();
                 }
             }
@@ -227,6 +233,8 @@ public class MainActivity extends AppCompatActivity implements
 
         /* When we finish loading, we want to hide the loading indicator from the user. */
         mLoadingIndicator.setVisibility(View.INVISIBLE);
+        String[] News = null;
+        String Display = "";
         /*
          * If the results are null, we assume an error has occurred. There are much more robust
          * methods for checking errors, but we wanted to keep this particular example simple.
@@ -234,7 +242,19 @@ public class MainActivity extends AppCompatActivity implements
         if (null == data) {
             showErrorMessage();
         } else {
-            mSearchResultsTextView.setText(data);
+            try {
+                News= JsonParser.parserJSON(MainActivity.this,data);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            
+            for (int x=0;x<News.length;x++)
+            {
+                Display=Display+News[x]+"\n\n--------------------\n\n";
+            }
+            mSearchResultsTextView.setText(Display);
+            
+            
             showJsonDataView();
         }
     }
