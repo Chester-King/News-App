@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private static final String SEARCH_QUERY_URL_EXTRA = "query";
 
-    private static final int GITHUB_SEARCH_LOADER = 22;
+    private static final int NEWS_SEARCH_LOADER = 22;
 
     private EditText mSearchBoxEditText;
 
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements
         mSearchBoxEditText = (EditText) findViewById(R.id.et_search_box);
 
         mUrlDisplayTextView = (TextView) findViewById(R.id.tv_url_display);
-        mSearchResultsTextView = (TextView) findViewById(R.id.tv_github_search_results_json);
+        mSearchResultsTextView = (TextView) findViewById(R.id.tv_news_search_results_json);
 
         mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);
 
@@ -75,42 +75,32 @@ public class MainActivity extends AppCompatActivity implements
         /*
          * Initialize the loader
          */
-        getSupportLoaderManager().initLoader(GITHUB_SEARCH_LOADER, null, this);
+        getSupportLoaderManager().initLoader(NEWS_SEARCH_LOADER, null, this);
     }
 
 
-    private void makeGithubSearchQuery() {
-        String githubQuery = mSearchBoxEditText.getText().toString();
+    private void makeNewsSearchQuery() {
+        String newsQuery = mSearchBoxEditText.getText().toString();
 
-        /*
-         * If the user didn't enter anything, there's nothing to search for. In the case where no
-         * search text was entered but the search button was clicked, we will display a message
-         * stating that there is nothing to search for and we will not attempt to load anything.
-         *
-         * If there is text entered in the search box when the search button was clicked, we will
-         * create the URL that will return our Github search results, display that URL, and then
-         * pass that URL to the Loader. The reason we pass the URL as a String is simply a matter
-         * of convenience. There are other ways of achieving this same result, but we felt this
-         * was the simplest.
-         */
-        if (TextUtils.isEmpty(githubQuery)) {
+
+        if (TextUtils.isEmpty(newsQuery)) {
             mUrlDisplayTextView.setText("No query entered, nothing to search for.");
             return;
         }
 
-        URL githubSearchUrl = NetworkUtils.buildUrl(githubQuery);
-        mUrlDisplayTextView.setText(githubSearchUrl.toString());
+        URL newsSearchUrl = NetworkUtils.buildUrl(newsQuery);
+        mUrlDisplayTextView.setText(newsSearchUrl.toString());
 
         Bundle queryBundle = new Bundle();
-        queryBundle.putString(SEARCH_QUERY_URL_EXTRA, githubSearchUrl.toString());
+        queryBundle.putString(SEARCH_QUERY_URL_EXTRA, newsSearchUrl.toString());
 
 
         LoaderManager loaderManager = getSupportLoaderManager();
-        Loader<String> githubSearchLoader = loaderManager.getLoader(GITHUB_SEARCH_LOADER);
-        if (githubSearchLoader == null) {
-            loaderManager.initLoader(GITHUB_SEARCH_LOADER, queryBundle, this);
+        Loader<String> newsSearchLoader = loaderManager.getLoader(NEWS_SEARCH_LOADER);
+        if (newsSearchLoader == null) {
+            loaderManager.initLoader(NEWS_SEARCH_LOADER, queryBundle, this);
         } else {
-            loaderManager.restartLoader(GITHUB_SEARCH_LOADER, queryBundle, this);
+            loaderManager.restartLoader(NEWS_SEARCH_LOADER, queryBundle, this);
         }
     }
 
@@ -136,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements
     public Loader<String> onCreateLoader(int id, final Bundle args) {
         return new AsyncTaskLoader<String>(this) {
 
-            String mGithubJson;
+            String mNewsJson;
 
             @Override
             protected void onStartLoading() {
@@ -146,8 +136,8 @@ public class MainActivity extends AppCompatActivity implements
                 }
 
 
-                if (mGithubJson != null) {
-                    deliverResult(mGithubJson);
+                if (mNewsJson != null) {
+                    deliverResult(mNewsJson);
                 } else {
 
                     mLoadingIndicator.setVisibility(View.VISIBLE);
@@ -167,9 +157,9 @@ public class MainActivity extends AppCompatActivity implements
                 }
 
                 try {
-                    URL githubUrl = new URL(searchQueryUrlString);
-                    String githubSearchResults = NetworkUtils.getResponseFromHttpUrl(githubUrl);
-                    return githubSearchResults;
+                    URL newsUrl = new URL(searchQueryUrlString);
+                    String newsSearchResults = NetworkUtils.getResponseFromHttpUrl(newsUrl);
+                    return newsSearchResults;
                 } catch (IOException e) {
                     e.printStackTrace();
                     return null;
@@ -177,9 +167,9 @@ public class MainActivity extends AppCompatActivity implements
             }
 
             @Override
-            public void deliverResult(String githubJson) {
-                mGithubJson = githubJson;
-                super.deliverResult(githubJson);
+            public void deliverResult(String newsJson) {
+                mNewsJson = newsJson;
+                super.deliverResult(newsJson);
             }
         };
     }
@@ -225,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemThatWasClickedId = item.getItemId();
         if (itemThatWasClickedId == R.id.action_search) {
-            makeGithubSearchQuery();
+            makeNewsSearchQuery();
             return true;
         }
         return super.onOptionsItemSelected(item);

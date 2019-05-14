@@ -35,7 +35,7 @@
             android:layout_marginTop="16dp">
 
             <TextView
-                android:id="@+id/tv_github_search_results_json"
+                android:id="@+id/tv_news_search_results_json"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Make a search!"

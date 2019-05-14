@@ -39,9 +39,9 @@ public class NetworkUtils {
     final static String key = "db99236a8ea242118a6d1ed17be31cf3";
 
 
-    public static URL buildUrl(String githubSearchQuery) {
+    public static URL buildUrl(String newsSearchQuery) {
         Uri builtUri = Uri.parse(NEWS_API_BASE_URL).buildUpon()
-                .appendQueryParameter(PARAM_QUERY, githubSearchQuery)
+                .appendQueryParameter(PARAM_QUERY, newsSearchQuery)
                 .appendQueryParameter(API_KEY, key)
                 .build();
 
@@ -55,9 +55,9 @@ public class NetworkUtils {
         return url;
     }
 
-    public static URL buildUrl(String githubSearchQuery,String Date) {
+    public static URL buildUrl(String newsSearchQuery,String Date) {
         Uri builtUri = Uri.parse(NEWS_API_BASE_URL).buildUpon()
-                .appendQueryParameter(PARAM_QUERY, githubSearchQuery)
+                .appendQueryParameter(PARAM_QUERY, newsSearchQuery)
                 .appendQueryParameter(API_KEY, key)
                 .build();
 
